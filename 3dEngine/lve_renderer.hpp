@@ -1,9 +1,11 @@
 #pragma once
 
+//project includes
 #include "lve_window.hpp"
 #include "lve_device.hpp"
 #include "lve_swap_chain.hpp"
 
+//c includes
 #include<cassert>
 #include <vector>
 #include <memory>
@@ -18,6 +20,7 @@ namespace lve {
         LveRenderer& operator=(const LveRenderer&) = delete;
 
         VkRenderPass getSwapChainRenderPass() const { return lveSwapChain->getRenderPass(); }
+        float getAspectRatio() const { return lveSwapChain->extentAspectRatio(); }
         bool isFrameInProgress() const { return isFrameStarted; }
 
         VkCommandBuffer getCurrentCommandBuffer() const {

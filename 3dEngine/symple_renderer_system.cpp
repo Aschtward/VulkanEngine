@@ -1,10 +1,14 @@
+//project includes
 #include "simple_renderer_system.hpp"
 #include "lve_device.hpp"
 
+//glm includes
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include<glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
+
+//c includes
 #include <stdexcept>
 #include <array>
 
@@ -62,15 +66,15 @@ namespace lve {
 			);
 	}
 
-	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<LveGameObject>& gameObjects) {
+	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<LveGameObject>& gameObjects, const Camera& camera) {
 		lvePipeline->bind(commandBuffer);
 
+		auto projectionView = camera.getProjection() * camera.getViewMatrix();
+
 		for (auto& obj : gameObjects) {
-			obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.001f, glm::two_pi<float>());
-			obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.0005f, glm::two_pi<float>());
 			SimplePushConstantData push{};
 			push.color = obj.color;
-			push.transform = obj.transform.mat4();
+			push.transform = projectionView * obj.transform.mat4();
 
 			vkCmdPushConstants(commandBuffer, pipelineLayout,
 				VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,

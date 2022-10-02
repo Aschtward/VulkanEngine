@@ -1,12 +1,15 @@
 #pragma once
 
+///project include
 #include "lve_device.hpp"
-#include<vector>
 
-
+///GLM includes
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include<glm/glm.hpp>
+
+///c includes
+#include<vector>
 
 namespace lve {
 
