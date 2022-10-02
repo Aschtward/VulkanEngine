@@ -56,7 +56,7 @@ namespace lve {
 
 		attributeDescripitons[0].binding = 0;
 		attributeDescripitons[0].location = 0;
-		attributeDescripitons[0].format = VK_FORMAT_R32G32_SFLOAT;
+		attributeDescripitons[0].format = VK_FORMAT_R32G32B32_SFLOAT;
 		attributeDescripitons[0].offset = offsetof(Vertex, position);
 
 		attributeDescripitons[1].binding = 0;
