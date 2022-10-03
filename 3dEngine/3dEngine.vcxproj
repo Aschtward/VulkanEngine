@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\VulkanSDK\Include;D:\VStudio\Libraries\glm;D:\VStudio\Libraries\glfw-3.3.8.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\VulkanSDK\Include;D:\VStudio\Libraries\glm;D:\VStudio\Libraries\glfw-3.3.8.bin.WIN64\include;D:\VStudio\Libraries\tynicodelib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\VulkanSDK\Include;D:\VStudio\Libraries\glm;D:\VStudio\Libraries\glfw-3.3.8.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\VulkanSDK\Include;D:\VStudio\Libraries\glm;D:\VStudio\Libraries\glfw-3.3.8.bin.WIN64\include;D:\VStudio\Libraries\tynicodelib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -139,7 +139,11 @@
     <ClCompile Include="KeyboardMovementController.cpp" />
     <ClCompile Include="LveWindow.cpp" />
     <ClCompile Include="lve_camera.cpp" />
-    <ClCompile Include="lve_model.cpp" />
+    <ClCompile Include="lve_game_object.cpp" />
+    <ClCompile Include="lve_model.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\VStudio\Libraries\tynicodelib\tiny_obj_loader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\VStudio\Libraries\tynicodelib\tiny_obj_loader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="lve_pipeline.cpp" />
     <ClCompile Include="lve_renderer.cpp" />
     <ClCompile Include="lve_swap_chain.cpp" />
@@ -156,6 +160,7 @@
     <ClInclude Include="lve_pipeline.hpp" />
     <ClInclude Include="lve_renderer.hpp" />
     <ClInclude Include="lve_swap_chain.hpp" />
+    <ClInclude Include="lve_utils.hpp" />
     <ClInclude Include="lve_window.hpp" />
     <ClInclude Include="lve_device.hpp" />
     <ClInclude Include="simple_renderer_system.hpp" />

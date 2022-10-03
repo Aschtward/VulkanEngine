@@ -3,10 +3,13 @@
 #include "lve_game_object.hpp"
 #include "lve_window.hpp"
 
+#include "iostream"
+
 namespace lve {
 	class KeyboardMovementController {
 
 	public:
+
 		struct KeyMappings {
 			int moveLeft = GLFW_KEY_A;
 			int moveRight = GLFW_KEY_D;
