@@ -20,8 +20,11 @@
 namespace lve{
 
 	struct GlobalUbo {
-		alignas(16) glm::mat4 projectionView{ 1.f };
-		alignas(16) glm::vec3 lightDirection = glm::normalize(glm::vec3{ -1.f,-3.f,-1.f });
+		glm::mat4 projection{ 1.f };
+		glm::mat4 view{ 1.f };
+		glm::vec4 ambientLightColor{ 1.f, 1.f, 1.f, .02f };
+		glm::vec3 lightPosition{ -1.f };
+		alignas(16) glm::vec4 lightColor{ 1.f };
 	};
 
 	FirstApp::FirstApp() {
@@ -49,7 +52,7 @@ namespace lve{
 		}
 
 		auto globalSetLayout = LveDescriptorSetLayout::Builder(lveDevice)
-			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER , VK_SHADER_STAGE_VERTEX_BIT)
+			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER , VK_SHADER_STAGE_ALL_GRAPHICS)
 			.build();
 
 		std::vector<VkDescriptorSet> globalDescriptorSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
@@ -67,6 +70,8 @@ namespace lve{
         camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f,0.f,2.5f));
 
         auto viewerObject = LveGameObject::createGameObject();
+		viewerObject.transform.translation.z = -2.5f;
+
         KeyboardMovementController cameraController{};
 
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -82,7 +87,7 @@ namespace lve{
             camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
             float aspect = lveRenderer.getAspectRatio();
-            camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
+            camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
 
 			if (auto commandBuffer = lveRenderer.beginFrame()) {
 				int frameIndex = lveRenderer.getFrameIndex();
@@ -91,20 +96,22 @@ namespace lve{
 					frameTime,
 					commandBuffer,
 					camera,
-					globalDescriptorSets[frameIndex]
+					globalDescriptorSets[frameIndex],
+					gameObjects
 				};
 
 				//update
 
 				GlobalUbo ubo{};
-				ubo.projectionView = camera.getProjection() * camera.getViewMatrix();
+				ubo.projection = camera.getProjection();
+				ubo.view = camera.getViewMatrix();
 				uboBuffer[frameIndex]->writeToBuffer(&ubo);
 				uboBuffer[frameIndex]->flush();
 
 				//render
 
 				lveRenderer.beginSwapChainRenderPass(commandBuffer);
-				simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
+				simpleRenderSystem.renderGameObjects(frameInfo);
 				lveRenderer.endSwapChainRenderPass(commandBuffer);
 				lveRenderer.endFrame();
 			}
@@ -116,9 +123,16 @@ namespace lve{
         std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice,"D:\\Pos\\3dEngine\\3dEngine\\models\\smooth_vase.obj");
         auto cube = LveGameObject::createGameObject();
         cube.model = lveModel;
-        cube.transform.translation = { .0f, .5f, 2.5f };
+        cube.transform.translation = { .0f, .5f, .0f };
         cube.transform.scale = { .5f, .5f, .5f };
-        gameObjects.push_back(std::move(cube));
+        gameObjects.emplace(cube.getId(),std::move(cube));
+
+		lveModel = LveModel::createModelFromFile(lveDevice, "D:\\Pos\\3dEngine\\3dEngine\\models\\quad.obj");
+		auto quad = LveGameObject::createGameObject();
+		quad.model = lveModel;
+		quad.transform.translation = { .0f, .5f, .0f };
+		quad.transform.scale = { .3f, .1f, .3f };
+		gameObjects.emplace(quad.getId(), std::move(quad));
 
 	}
 
