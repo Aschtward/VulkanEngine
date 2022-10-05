@@ -17,9 +17,11 @@ namespace lve {
 		void setViewYXZ(glm::vec3 position, glm::vec3 rotation);
 		const glm::mat4& getProjection() const { return projectionMatrix; }
 		const glm::mat4& getViewMatrix() const { return viewMatrix; }
+		const glm::mat4& getinverseViewMatrix() const { return inverseViewMatrix; }
 
 	private:
 		glm::mat4 projectionMatrix{1.f};
 		glm::mat4 viewMatrix{ 1.f };
+		glm::mat4 inverseViewMatrix{ 1.f };
 	};
 }
