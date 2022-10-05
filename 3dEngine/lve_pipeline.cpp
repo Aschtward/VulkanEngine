@@ -69,8 +69,8 @@ namespace lve {
 		shaderStages[1].pNext = nullptr;
 		shaderStages[1].pSpecializationInfo = nullptr;
 
-		auto bindingDescriptions = LveModel::Vertex::getBindingDescripitons();
-		auto atributteDescriptions = LveModel::Vertex::getAttributeDescripitons();
+		auto& bindingDescriptions = configInfo.bindingDescripitions;
+		auto& atributteDescriptions = configInfo.attributeDescripitons;
 
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 
@@ -194,5 +194,8 @@ namespace lve {
 		configInfo.dynamicStateInfo.dynamicStateCount =
 			static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
 		configInfo.dynamicStateInfo.flags = 0;
+
+		configInfo.bindingDescripitions = LveModel::Vertex::getBindingDescripitons();
+		configInfo.attributeDescripitons = LveModel::Vertex::getAttributeDescripitons();
 	}
 }

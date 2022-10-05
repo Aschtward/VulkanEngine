@@ -4,6 +4,7 @@
 #include "lve_camera.hpp"
 #include "keyboard_movement_controller.hpp"
 #include "lve_buffer.hpp"
+#include "point_light_system.hpp"
 
 //glm includes
 #define GLM_FORCE_RADIANS
@@ -18,14 +19,6 @@
 #include <numeric>
 
 namespace lve{
-
-	struct GlobalUbo {
-		glm::mat4 projection{ 1.f };
-		glm::mat4 view{ 1.f };
-		glm::vec4 ambientLightColor{ 1.f, 1.f, 1.f, .02f };
-		glm::vec3 lightPosition{ -1.f };
-		alignas(16) glm::vec4 lightColor{ 1.f };
-	};
 
 	FirstApp::FirstApp() {
 		globalPool = LveDescriptorPool::Builder(lveDevice).setMaxSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT)
@@ -64,8 +57,9 @@ namespace lve{
 		}
 
 		SimpleRenderSystem simpleRenderSystem{lveDevice, lveRenderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
-
-        Camera camera{};
+		PointLightSystem pointLightSystem{ lveDevice, lveRenderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout() };
+        
+		Camera camera{};
 
         camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f,0.f,2.5f));
 
@@ -105,6 +99,7 @@ namespace lve{
 				GlobalUbo ubo{};
 				ubo.projection = camera.getProjection();
 				ubo.view = camera.getViewMatrix();
+				pointLightSystem.update(frameInfo, ubo);
 				uboBuffer[frameIndex]->writeToBuffer(&ubo);
 				uboBuffer[frameIndex]->flush();
 
@@ -112,6 +107,7 @@ namespace lve{
 
 				lveRenderer.beginSwapChainRenderPass(commandBuffer);
 				simpleRenderSystem.renderGameObjects(frameInfo);
+				pointLightSystem.render(frameInfo);
 				lveRenderer.endSwapChainRenderPass(commandBuffer);
 				lveRenderer.endFrame();
 			}
@@ -124,15 +120,36 @@ namespace lve{
         auto cube = LveGameObject::createGameObject();
         cube.model = lveModel;
         cube.transform.translation = { .0f, .5f, .0f };
-        cube.transform.scale = { .5f, .5f, .5f };
+        cube.transform.scale = { 2.5f, 2.5f, 2.5f };
         gameObjects.emplace(cube.getId(),std::move(cube));
 
 		lveModel = LveModel::createModelFromFile(lveDevice, "D:\\Pos\\3dEngine\\3dEngine\\models\\quad.obj");
 		auto quad = LveGameObject::createGameObject();
 		quad.model = lveModel;
 		quad.transform.translation = { .0f, .5f, .0f };
-		quad.transform.scale = { .3f, .1f, .3f };
+		quad.transform.scale = { 2.3f, 2.1f, 2.3f };
 		gameObjects.emplace(quad.getId(), std::move(quad));
+
+		std::vector<glm::vec3> lightColors{
+		 {1.f, .1f, .1f},
+		 {.1f, .1f, 1.f},
+		 {.1f, 1.f, .1f},
+		 {1.f, 1.f, .1f},
+		 {.1f, 1.f, 1.f},
+		 {1.f, 1.f, 1.f}  
+		};
+
+		for (int i = 0; i < lightColors.size(); i++) {
+			auto pointLight = LveGameObject::makePointLight(0.2f);
+			pointLight.color = lightColors[i];
+			auto rotateLight = glm::rotate(
+				glm::mat4(1.f),
+				i * glm::two_pi<float>() / lightColors.size(),
+				{ 0.f,-1.f,0.f }
+			);
+			pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, 1.f));
+			gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+		}
 
 	}
 

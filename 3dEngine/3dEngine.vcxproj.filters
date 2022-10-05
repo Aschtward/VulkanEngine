@@ -16,6 +16,9 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{576012dc-dd32-4388-8ab7-ce7820aa734d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{66542e90-3d41-441a-8904-58c7fa8466cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -42,9 +45,6 @@
     <ClCompile Include="lve_renderer.cpp">
       <Filter>Arquivos de Recurso</Filter>
     </ClCompile>
-    <ClCompile Include="symple_renderer_system.cpp">
-      <Filter>Arquivos de Recurso</Filter>
-    </ClCompile>
     <ClCompile Include="lve_camera.cpp">
       <Filter>Arquivos de Recurso</Filter>
     </ClCompile>
@@ -59,6 +59,12 @@
     </ClCompile>
     <ClCompile Include="lve_descriptor.cpp">
       <Filter>Arquivos de Recurso</Filter>
+    </ClCompile>
+    <ClCompile Include="symple_renderer_system.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="point_light_system.cpp">
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,9 +92,6 @@
     <ClInclude Include="lve_renderer.hpp">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="simple_renderer_system.hpp">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
     <ClInclude Include="lve_camera.hpp">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
@@ -107,6 +110,12 @@
     <ClInclude Include="lve_descriptor.hpp">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
+    <ClInclude Include="simple_renderer_system.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="point_light_system.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="simple_shader.vert">
@@ -116,6 +125,12 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="compile.bat">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="point_light.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="point_light.frag">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

@@ -57,4 +57,12 @@ namespace lve {
             } 
         };
     }
+    LveGameObject LveGameObject::makePointLight(float intensisty, float radius, glm::vec3 color) {
+        LveGameObject gameObj = LveGameObject::createGameObject();
+        gameObj.color = color;
+        gameObj.transform.scale.x = radius;
+        gameObj.pointLight = std::make_unique<PointLightComponent>();
+        gameObj.pointLight->lightIntensity = intensisty;
+        return gameObj;
+    }
 }
